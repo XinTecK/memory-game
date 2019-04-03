@@ -36,7 +36,7 @@
 	background-color: black;
 }
 
-.score {
+.score, .level {
 	font-family: "arcade_classic";
 	margin: 5px 0px;
 }

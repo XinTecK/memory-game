@@ -1,15 +1,23 @@
 const gameboard = document.getElementById('gameboard');
-const verticalLength = 10;
-const horizontalLength = 10;
+const initialVerticalLength = 2;
+const initialHorizontalLength = 2;
+let verticalLength = 2;
+let horizontalLength = 2;
 const nbAnswer = 3;
 const showingAnswerDuration = 2;
 let answers = [];
 let inputAnswers = [];
 let goodAnswers = 0;
 let nbInput = 0;
+let level = 1;
 
 function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
+}
+
+function removeElement(className) {
+    var elem = document.querySelector('.' + className);
+    return elem.parentNode.removeChild(elem);
 }
 
 function createGame()
@@ -35,15 +43,31 @@ function createGame()
 	}
 	let score = document.createElement('span');
 	score.classList.add('score');
+	let levelElement = document.createElement('level');
+	levelElement.classList.add('level');
+	levelElement.innerHTML = "Level : " + level;
 	let playAgainBtn = document.createElement('button');
 	playAgainBtn.classList.add('playAgainBtn');
 	playAgainBtn.style.display = "none";
-	playAgainBtn.innerHTML = "Play again";
 	playAgainBtn.addEventListener('click', function(){
-		window.location.reload();
+		if(playAgainBtn.classList.contains('nextLevel')){
+			deleteGame();
+			horizontalLength++;
+			if(verticalLength < 9){
+				verticalLength++;
+			}
+			level++;
+			createGame();
+			createSolution();
+			showSolution();
+		} else {
+			level = 1;
+			window.location.reload();
+		}
 	})
 	gameboard.appendChild(table);
 	gameboard.appendChild(score);
+	gameboard.appendChild(levelElement);
 	gameboard.appendChild(playAgainBtn);
 }
 
@@ -122,12 +146,16 @@ function disableEntries()
 
 function win()
 {
+	document.querySelector('.playAgainBtn').classList.add("nextLevel");
+	document.querySelector('.playAgainBtn').innerHTML = "Next level";
 	document.querySelector('.playAgainBtn').style.display = "block";
 }
 
 function lose()
 {
+	document.querySelector('.playAgainBtn').classList.remove('nextLevel');
 	document.querySelector('.playAgainBtn').style.display = "block";
+	document.querySelector('.playAgainBtn').innerHTML = "Play again";
 	for(let i = 0; i < answers.length; i++) {
 		answers[i].classList.remove('grey');
 		if (!(answers[i].classList.contains('red')))
@@ -135,6 +163,17 @@ function lose()
 			answers[i].classList.add('orange');
 		}
 	}
+}
+
+function deleteGame(){
+	answers = [];
+	inputAnswers = [];
+	goodAnswers = 0;
+	nbInput = 0;
+	removeElement('game');
+	removeElement('score');
+	removeElement('level');
+	removeElement('playAgainBtn');
 }
 
 createGame();
