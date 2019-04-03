@@ -2,8 +2,9 @@ const gameboard = document.getElementById('gameboard');
 const verticalLength = 10;
 const horizontalLength = 10;
 const nbAnswer = 3;
-const showingAnswerDuration = 3;
+const showingAnswerDuration = 2;
 let answers = [];
+let inputAnswers = [];
 let goodAnswers = 0;
 let nbInput = 0;
 
@@ -15,11 +16,11 @@ function createGame()
 {
 	let table = document.createElement('table');
 	table.classList.add('game');
-	for (let i = 0; i < horizontalLength; i++)
+	for (let i = 0; i < verticalLength; i++)
 	{
 		let tr = document.createElement('tr');
 		tr.classList.add('row');
-		for(let j = 0; j < verticalLength; j++) 
+		for(let j = 0; j < horizontalLength; j++) 
 		{
 			let td = document.createElement('td');
 			td.classList.add('column');
@@ -34,11 +35,10 @@ function createGame()
 	}
 	let score = document.createElement('span');
 	score.classList.add('score');
-	score.innerHTML = "Coups joués : 0/3";
 	let playAgainBtn = document.createElement('button');
 	playAgainBtn.classList.add('playAgainBtn');
 	playAgainBtn.style.display = "none";
-	playAgainBtn.innerHTML = "Rejouer";
+	playAgainBtn.innerHTML = "Play again";
 	playAgainBtn.addEventListener('click', function(){
 		window.location.reload();
 	})
@@ -54,8 +54,13 @@ function createSolution()
 		let rowNumberIndex = getRandomInt(verticalLength);
 		let columnNumberIndex = getRandomInt(horizontalLength);
 		let rowTrigger = document.querySelectorAll('.row')[rowNumberIndex];
-		answers[i] = rowTrigger.childNodes[columnNumberIndex].childNodes[0];
+		if(answers.includes(rowTrigger.childNodes[columnNumberIndex].childNodes[0])) {
+			i--;
+		} else {
+			answers[i] = rowTrigger.childNodes[columnNumberIndex].childNodes[0];
+		}
 	}
+	document.querySelector('.score').innerHTML = "Good matches : 0/" + answers.length;
 }
 
 function showSolution()
@@ -70,7 +75,7 @@ function showSolution()
 			answers[i].classList.add('grey');
 		}
 		enableEntries();
-	}, 2000);
+	}, showingAnswerDuration * 1000);
 }
 
 function enableEntries()
@@ -91,11 +96,10 @@ function checkEntriesMatch(element)
 		element.classList.add('red');
 		element.disabled = true;
 		goodAnswers++;
-		
 		if (goodAnswers == answers.length) {
-			document.querySelector('.score').innerHTML = "Coups joués : " + goodAnswers + "/" + answers.length;
 			win();
 			disableEntries();
+			alert('Congratulations ! You have won ! :D');
 		}
 	} else {
 		element.classList.remove('grey');
@@ -103,9 +107,10 @@ function checkEntriesMatch(element)
 		element.disabled = true;
 		lose();
 		disableEntries();
+		alert('Argh ! You have lost :/');
 	}
 	nbInput++;
-	document.querySelector('.score').innerHTML = "Coups joués : " + nbInput + "/" + answers.length;
+	document.querySelector('.score').innerHTML = "Good matches : " + goodAnswers + "/" + answers.length;
 }
 
 function disableEntries()
@@ -117,14 +122,19 @@ function disableEntries()
 
 function win()
 {
-	alert('Bravo ! Vous avez gagné');
 	document.querySelector('.playAgainBtn').style.display = "block";
 }
 
 function lose()
 {
-	alert('Dommage ! Vous avez perdu');
 	document.querySelector('.playAgainBtn').style.display = "block";
+	for(let i = 0; i < answers.length; i++) {
+		answers[i].classList.remove('grey');
+		if (!(answers[i].classList.contains('red')))
+		{
+			answers[i].classList.add('orange');
+		}
+	}
 }
 
 createGame();

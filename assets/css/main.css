@@ -1,3 +1,8 @@
+@font-face {
+	font-family: 'arcade_classic';
+	src: url('../fonts/arcade_classic.ttf')  format('truetype');
+}
+
 #gameboard {
 	display: flex;
 	flex-direction: column;
@@ -23,11 +28,21 @@
 	background-color: red;
 }
 
+.orange {
+	background-color: orange;
+}
+
 .black {
 	background-color: black;
+}
+
+.score {
+	font-family: "arcade_classic";
+	margin: 5px 0px;
 }
 
 .playAgainBtn {
 	height: 50px;
 	width: 100px;
+	font-family: "arcade_classic";
 }
