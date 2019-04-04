@@ -3,13 +3,14 @@ const initialVerticalLength = 2;
 const initialHorizontalLength = 2;
 let verticalLength = 2;
 let horizontalLength = 2;
-const nbAnswer = 3;
+let nbAnswer = 3;
 const showingAnswerDuration = 2;
 let answers = [];
 let inputAnswers = [];
 let goodAnswers = 0;
 let nbInput = 0;
 let level = 1;
+const nbAnswerIncreaseLevel = [5, 10, 15];
 
 function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
@@ -52,11 +53,14 @@ function createGame()
 	playAgainBtn.addEventListener('click', function(){
 		if(playAgainBtn.classList.contains('nextLevel')){
 			deleteGame();
-			horizontalLength++;
 			if(verticalLength < 9){
 				verticalLength++;
+				horizontalLength++;
 			}
 			level++;
+			if (nbAnswerIncreaseLevel.includes(level)) {
+				nbAnswer++;
+			}
 			createGame();
 			createSolution();
 			showSolution();
