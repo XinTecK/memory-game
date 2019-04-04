@@ -10,7 +10,7 @@ let inputAnswers = [];
 let goodAnswers = 0;
 let nbInput = 0;
 let level = 1;
-const nbAnswerIncreaseLevel = [5, 10, 15];
+const increasingAnswerLevel = [5, 10, 15];
 
 function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
@@ -58,7 +58,7 @@ function createGame()
 				horizontalLength++;
 			}
 			level++;
-			if (nbAnswerIncreaseLevel.includes(level)) {
+			if (increasingAnswerLevel.includes(level)) {
 				nbAnswer++;
 			}
 			createGame();
